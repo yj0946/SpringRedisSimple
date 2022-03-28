@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="SpringRedisTomcat:war">
+    <output-path>$PROJECT_DIR$/out/artifacts/SpringRedisTomcat_war</output-path>
+    <root id="archive" name="SpringRedisTomcat_war.war">
+      <element id="artifact" artifact-name="SpringRedis:war exploded" />
+    </root>
+  </artifact>
+</component>

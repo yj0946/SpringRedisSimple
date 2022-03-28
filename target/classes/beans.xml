@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd ">
+
+  <!--3.注解驱动-->
+  <mvc:annotation-driven/>
+
+  <context:component-scan base-package="com.spring.redis"/>
+
+
+  <!--3.datasource数据源-->
+<!--  <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">-->
+<!--    <property name="driverClass" value="com.mysql.jdbc.Driver"/>-->
+<!--    <property name="jdbcUrl" value="jdbc:mysql://192.168.1.103:3306/mybatis_test?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"/>-->
+<!--    <property name="user" value="root"/>-->
+<!--    <property name="password" value="123456"/>-->
+
+
+<!--    <property name="maxPoolSize" value="400"/>-->
+<!--    <property name="minPoolSize" value="50"/>-->
+<!--    <property name="initialPoolSize" value="50"/>-->
+<!--    <property name="acquireIncrement" value="100"/>-->
+<!--  </bean>-->
+  <!--2.配置数据库连接池(选用druid)-->
+  <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+    <!--配置连接池属性-->
+
+    <!--配置驱动类名字-->
+    <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+
+    <!-- 基本属性 url、user、password -->
+    <property name="url" value="jdbc:mysql://192.168.1.103:3306/mybatis_test?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8" />
+    <property name="username" value="root" />
+    <property name="password" value="123456" />
+
+    <!-- 配置初始化大小、最小、最大 -->
+    <property name="initialSize" value="1" />
+    <property name="minIdle" value="1" />
+    <property name="maxActive" value="20" />
+
+    <!-- 配置获取连接等待超时的时间 -->
+    <property name="maxWait" value="60000" />
+    <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+    <property name="timeBetweenEvictionRunsMillis" value="60000" />
+    <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+    <property name="minEvictableIdleTimeMillis" value="300000" />
+
+    <property name="validationQuery" value="select 1 " />
+    <!-- 建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。 -->
+    <property name="testWhileIdle" value="true" />
+
+    <!-- 这里建议配置为TRUE，防止取到的连接不可用,但会影响性能 -->
+    <property name="testOnBorrow" value="false" />
+    <!-- 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能-->
+    <property name="testOnReturn" value="false" />
+
+    <property name="poolPreparedStatements" value="true" />
+    <property name="maxOpenPreparedStatements" value="20" />
+
+    <!-- 每隔10分钟把监控数据输出到日志中 -->
+    <property name ="timeBetweenLogStatsMillis" value ="600000" />
+    <!-- 自定义实现输入监控数据到日志 -->
+    <property name ="statLogger" ref ="localStatLogger" />
+
+    <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计   开启web监控、开启sql防火墙 -->
+    <property name="filters" value="stat,wall" />
+
+    <property name="proxyFilters">
+      <list>
+        <ref bean="logFilter" />
+        <ref bean="statFilter" />
+      </list>
+    </property>
+  </bean>
+
+  <bean id ="localStatLogger" class ="com.spring.redis.util.LocalStatLogger"/>
+  <!-- 慢SQL记录 -->
+  <bean id="statFilter" class="com.alibaba.druid.filter.stat.StatFilter">
+    <!-- 慢sql时间设置,即执行时间大于200毫秒的都是慢sql -->
+    <property name="slowSqlMillis" value="5"/>
+    <property name="logSlowSql" value="true"/>
+  </bean>
+
+  <bean id="logFilter" class="com.alibaba.druid.filter.logging.Slf4jLogFilter">
+    <property name="statementExecutableSqlLogEnable" value="false" />
+  </bean>
+
+
+
+  <!-- 开启spring监控  -->
+  <bean id="druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor"/>
+
+  <bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut" scope="prototype">
+    <property name="patterns">
+      <list>
+        <value>com.spring.redis.controller.*</value>
+        <value>com.spring.redis.service.*</value>
+        <value>com.spring.redis.mapper.*</value>
+      </list>
+    </property>
+  </bean>
+
+  <aop:config>
+    <aop:advisor advice-ref="druid-stat-interceptor" pointcut-ref="druid-stat-pointcut"/>
+  </aop:config>
+
+  <!--4.SessionFactory-->
+  <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource"/>
+    <!--整合MyBatis, 包扫描Mapper文件-->
+    <property name="configLocation" value="classpath:SqlMapConfig.xml"/>
+    <property name="mapperLocations" value="classpath:com/spring/redis/mapper/*.xml"/>
+  </bean>
+
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="com.spring.redis.mapper" />
+    <!-- 配置sqlSessionFactoryBeanName -->
+    <property name="sqlSessionFactoryBeanName" value="sessionFactory" />
+   </bean>
+
+  <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+
+<!--  2.内部资源视图解析器, suffix为空, 方便跟参数 url?id=xxx-->
+      <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+          <property name="prefix" value="/WEB-INF/pages/"/>
+          <property name="suffix" value=""/>
+      </bean>
+  <import resource="springmvc.xml"/>
+</beans>

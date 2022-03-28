@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <!--开启全局的懒加载-->
+                <setting name="lazyLoadingEnabled" value="true"/>
+        <!--        &lt;!&ndash;关闭立即加载，其实不用配置，默认为false&ndash;&gt;-->
+        <!--        <setting name="aggressiveLazyLoading" value="false"/>-->
+        <!--<setting name="logImpl" value="LOG4J"/>-->
+        <!--        <setting name="autoMappingBehavior" value="PARTIAL"/>-->
+    </settings>
+
+
+<!--        <mappers>-->
+<!--&lt;!&ndash;            <mapper resource="mapper/UserDao.xml"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <mapper resource="mapper/UserNewDaoMapper.xml"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <mapper resource="mapper/RetailerMapper.xml"/>&ndash;&gt;-->
+<!--            <mapper class="com.spring.redis.mapper.UserMapper"/>-->
+<!--        </mappers>-->
+</configuration>
