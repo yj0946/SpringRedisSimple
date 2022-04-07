@@ -102,7 +102,7 @@
     <init-param>
       <!-- 访问IP黑名单 -->
       <param-name>deny</param-name>
-      <param-value>192.168.1.103</param-value>
+      <param-value>192.168.1.101,192.168.1.102,192.168.1.105</param-value>
     </init-param>
 
     <init-param>
