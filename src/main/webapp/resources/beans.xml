@@ -20,7 +20,7 @@
   <mvc:annotation-driven/>
 
   <context:component-scan base-package="com.spring.redis"/>
-
+  <aop:aspectj-autoproxy />
 
   <!--3.datasource数据源-->
 <!--  <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">-->
@@ -114,9 +114,10 @@
     </property>
   </bean>
 
-  <aop:config>
-    <aop:advisor advice-ref="druid-stat-interceptor" pointcut-ref="druid-stat-pointcut"/>
-  </aop:config>
+  <aop:config proxy-target-class="true"/>
+<!--  <aop:config>-->
+<!--    <aop:advisor advice-ref="druid-stat-interceptor" pointcut-ref="druid-stat-pointcut"/>-->
+<!--  </aop:config>-->
 
   <!--4.SessionFactory-->
   <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

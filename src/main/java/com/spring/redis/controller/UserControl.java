@@ -2,6 +2,7 @@ package com.spring.redis.controller;
 
 import com.spring.redis.entity.redisuser;
 import com.spring.redis.service.UserService;
+import com.spring.redis.util.LogAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ public class UserControl {
 
     @RequestMapping("/user")
     @ResponseBody
+    @LogAnnotation(eventType = "getLists", detailArgs = {"查询List数据"})
     public List<redisuser> getLists(){
         return userService.getLists();
     }
