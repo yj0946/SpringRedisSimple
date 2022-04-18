@@ -5,6 +5,8 @@ import com.spring.redis.entity.UserExample;
 import com.spring.redis.entity.redisuser;
 import com.spring.redis.mapper.UserMapper;
 import com.spring.redis.service.UserService;
+import com.spring.redis.util.LogAnnotationAspect;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,13 +16,16 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final Logger loggerUserServiceImpl = Logger.getLogger(UserServiceImpl.class);
+
     @Autowired
     private UserMapper userMapper;
 
     @Cacheable(value="user")
     @Override
     public List<redisuser> getLists() {
-        System.out.println("打印语句则没有走缓存");
+        //System.out.println("打印语句则没有走缓存");
+        loggerUserServiceImpl.info("打印语句则没有走缓存");
         return userMapper.getLists();
     }
 
