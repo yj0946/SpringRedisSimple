@@ -20,6 +20,7 @@ public class UserControl {
     @RequestMapping("/getUserDate")
     public void getUserDate(Date date){
         int i = 0;
+        i++;
         System.out.println(date);
     }
 
