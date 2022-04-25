@@ -9,12 +9,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.List;
 
 @Controller
 public class UserControl {
     @Autowired
     private UserService userService;
+
+    @RequestMapping("/getUserDate")
+    public void getUserDate(Date date){
+        int i = 0;
+        System.out.println(date);
+    }
 
     @RequestMapping("/user")
     @ResponseBody

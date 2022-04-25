@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
-    @Cacheable(value="user")
+//    @Cacheable(value="user")
     @Override
     public List<redisuser> getLists() {
         //System.out.println("打印语句则没有走缓存");
@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.getLists();
     }
 
-    @CacheEvict(value= "user",allEntries=true)//清空缓存，
+//    @CacheEvict(value= "user",allEntries=true)//清空缓存，
     @Override
     public Integer add(redisuser user) {
         return userMapper.add(user);
