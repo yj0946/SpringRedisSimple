@@ -16,8 +16,16 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd ">
 
+  <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+    <property name="converters">
+      <list>
+        <bean class="com.spring.redis.util.DateConverter"/>
+      </list>
+    </property>
+  </bean>
+
   <!--3.注解驱动-->
-  <mvc:annotation-driven/>
+  <mvc:annotation-driven conversion-service="conversionService"/>
 
   <context:component-scan base-package="com.spring.redis"/>
   <aop:aspectj-autoproxy />

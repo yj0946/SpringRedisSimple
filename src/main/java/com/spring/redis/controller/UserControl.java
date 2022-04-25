@@ -18,9 +18,9 @@ public class UserControl {
     private UserService userService;
 
     @RequestMapping("/getUserDate")
-    public void getUserDate(Date date){
-        int i = 0;
-        System.out.println(date);
+    @ResponseBody
+    public String getUserDate(Date date){
+       return String.valueOf(date.getTime());
     }
 
     @RequestMapping("/user")

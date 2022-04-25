@@ -34,9 +34,6 @@
     <!--    <context:exclude-filter    type="annotation" expression="org.springframework.stereotype.Service"    />-->
     <!--</context:component-scan>-->
 
-
-
-
     <!--redis文件-->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
